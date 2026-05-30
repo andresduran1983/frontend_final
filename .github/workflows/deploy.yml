@@ -12,6 +12,9 @@ jobs:
       - name: Checkout del código
         uses: actions/checkout@v3
 
+      - name: Debug IP
+        run: echo "La IP es ${{ secrets.EC2_PUBLIC_IP_FRONT }}"
+
       - name: Desplegar en AWS EC2 via SSH
         uses: appleboy/ssh-action@master
         with:
@@ -19,6 +22,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }} # Tu llave .pem que guardaste en Secrets
           script: |
+
             # 1. Entrar a la carpeta del proyecto (ajusta la ruta si es diferente)
             cd /home/ec2-user
             
