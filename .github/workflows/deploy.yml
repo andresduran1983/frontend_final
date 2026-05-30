@@ -1,0 +1,33 @@
+name: Deploy Tienda de Perritos CI/CD
+
+on:
+  push:
+    branches: [ deploy ] # Se activa solo cuando haces push a la rama deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Desplegar en AWS EC2 via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_PUBLIC_IP_FRONT }} # IP de tu instancia
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }} # Tu llave .pem que guardaste en Secrets
+          script: |
+            # 1. Entrar a la carpeta del proyecto (ajusta la ruta si es diferente)
+            cd /home/ec2-user
+            
+            # 2. Detener contenedores viejos para evitar conflictos
+            sudo docker stop tienda-frontend tienda-backend tienda-db || true
+            sudo docker rm tienda-frontend tienda-backend tienda-db || true
+            
+            # 3. Levantar todo el stack usando el archivo docker-compose.yml que subimos
+            # Esto construirá las imágenes y activará la persistencia
+            sudo docker compose up -d --build
+            
+            # 4. Limpieza de imágenes huérfanas para no llenar el disco
+            sudo docker image prune -f
