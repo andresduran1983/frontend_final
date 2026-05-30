@@ -1,4 +1,4 @@
-# Tienda de Perritos — DevOps
+# Tienda de Perritos — DevOps and
 
 CRUD de productos: frontend estático (Nginx) + backend Node/Express + MySQL 8.
 
