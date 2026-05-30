@@ -2,7 +2,8 @@ name: Deploy Tienda de Perritos CI/CD
 
 on:
   push:
-    branches: [ deploy ] # Se activa solo cuando haces push a la rama deploy
+    branches: [ master ] # Se activa solo cuando haces push a la rama master
+
 
 jobs:
   deploy:
